@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -8,23 +7,22 @@ import {
   Keyboard,
   TextInput,
 } from 'react-native';
+import styles from './styles';
 import React, {useState, useEffect} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Local Sorage
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Vectore Icon Library
-import Dialog from 'react-native-dialog'; // Dialog Box
-import DialogInput from 'react-native-dialog/lib/Input'; // Dialog Box Input
-import filter from 'lodash.filter'; // Flatlist Searching
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import Icon from 'react-native-vector-icons/MaterialIcons'; 
+import Dialog from 'react-native-dialog'; 
+import DialogInput from 'react-native-dialog/lib/Input'; 
+import filter from 'lodash.filter'; 
 
 const App = () => {
-  // This is to manage tasks State
-  const [tasks, setTasks] = useState([
-    {id: 1, title1: 'First TODO', desc: 'Hello', completed: false},
-  ]);
+  
+  const [tasks, setTasks] = useState([]);
 
-  const [title, setTitle] = useState(''); // This is to manage title State
-  const [description, setDescription] = useState(''); // This is to manage Description State
-  const [visible, setVisible] = useState(false); // This is to manage Dialog Box State
-  const [search, setSearch] = useState(''); // This is to manage Search TextInput State
+  const [title, setTitle] = useState(''); 
+  const [description, setDescription] = useState(''); 
+  const [visible, setVisible] = useState(false); 
+  const [search, setSearch] = useState(''); 
   const [fullData, setFullData] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
 
@@ -36,7 +34,7 @@ const App = () => {
     storeData(tasks);
   }, [tasks]);
 
-  // Adding a task
+  
   const addTask = () => {
     if (title == '' || description == '') {
       Alert.alert('Error', 'Cannot Add Empty Task');
@@ -51,19 +49,19 @@ const App = () => {
       setTasks([...tasks, newTask]);
       setTitle('');
       setDescription('');
-      handleCancel(); // for dialog box to disappear
+      handleCancel(); 
 
       Keyboard.dismiss();
     }
   };
 
-  // Deleting a task
+  
   const deleteTodo = taskID => {
     const newTaskList = tasks.filter(item => item.id != taskID);
     setTasks(newTaskList);
   };
 
-  // Alert Box for confirmation of task completed
+  
   const taskCompleted = taskID => {
     Alert.alert('Mark Completed?', '', [
       {
@@ -86,7 +84,7 @@ const App = () => {
     setTasks(tempTasks);
   };
 
-  // Saving Data into local storage
+  
   const storeData = async todos => {
     try {
       const stringifyTodos = JSON.stringify(todos);
@@ -96,7 +94,7 @@ const App = () => {
     }
   };
 
-  // Fetching Data from local storage
+  
   const getData = async () => {
     try {
       const tasks = await AsyncStorage.getItem('tasks');
@@ -108,8 +106,7 @@ const App = () => {
     }
   };
 
-  // Create Dialog function that will
-  // Open and close Dialog upon button clicks.
+  
   const showDialog = () => {
     setVisible(true);
   };
@@ -187,8 +184,8 @@ const App = () => {
         contentContainerStyle={{padding: 15}}
         renderItem={({item}) => <Container todo={item} />}
       />
-      <View>
-        <Dialog.Container visible={visible}>
+      <View >
+        <Dialog.Container visible={visible} contentStyle={{borderRadius:20}}>
           <Dialog.Title>Add Task</Dialog.Title>
           <DialogInput
             placeholder="Enter Title"
@@ -215,50 +212,6 @@ const App = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  mainView: {
-    flex: 1,
-  },
 
-  appBar: {
-    margin: '5%',
-    alignItems: 'center',
-  },
-
-  heading: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-
-  addButtonView: {
-    height: 48,
-    width: 48,
-    backgroundColor: 'black',
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: '81%',
-    marginBottom: '4%',
-  },
-
-  container: {
-    padding: '5%',
-    marginVertical: 9,
-    backgroundColor: 'aliceblue',
-    flexDirection: 'row',
-  },
-
-  textInput: {
-    width: '88%',
-    borderRadius: 5,
-    borderColor: 'rgba(0, 0, 0, 0.2)',
-    borderWidth: 1,
-  },
-
-  searchView: {
-    alignItems: 'center',
-  },
-});
 
 export default App;
